@@ -5,23 +5,12 @@ on:
   pull_request:
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Import initial project files when present
-        if: hashFiles('project-source.zip') != ''
-        run: |
-          unzip -o project-source.zip -x '.github/*'
-          rm project-source.zip
-          chmod +x gradlew
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .
-          git commit -m 'Add Android application source and tests'
-          git push
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -45,8 +34,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -64,9 +51,15 @@ jobs:
           api-level: 35
           arch: x86_64
           profile: pixel_2
-          script: gradle connectedDebugAndroidTest --no-daemon
+          script: |
+            adb shell svc wifi disable
+            adb shell svc data disable
+            gradle connectedDebugAndroidTest --no-daemon
+            adb pull /sdcard/Android/data/rs.kucnitroskovi/files/screenshots app/build/screenshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: device-test-results
-          path: app/build/reports/androidTests/
+          path: |
+            app/build/reports/androidTests/
+            app/build/screenshots/
