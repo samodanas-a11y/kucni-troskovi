@@ -27,7 +27,7 @@ class AppModel(app: Application) : AndroidViewModel(app) {
     var pendingImport by mutableStateOf<Ledger?>(null); private set
     private var lastAttempt = 0L
     init { reload(); refreshRate() }
-    fun setTheme(value: String) { theme = value; preferences.edit().putString("theme", value).apply() }
+    fun changeTheme(value: String) { theme = value; preferences.edit().putString("theme", value).apply() }
     fun reload() = change(null) { }
     private fun change(success: String?, action: () -> Unit) {
         if (busy) return

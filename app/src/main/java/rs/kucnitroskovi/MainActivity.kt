@@ -334,7 +334,7 @@ private fun Settings(model: AppModel, export: () -> Unit, csv: () -> Unit, resto
         Section("Kurs i valute"); RateInfo(model)
         Text("EUR iznosi su informativni preračun po prikazanom kursu, uključujući ranije unose. Originalni iznosi ostaju u dinarima.", style = MaterialTheme.typography.bodyMedium)
         HorizontalDivider(); Section("Izgled")
-        ModeChips(listOf("Sistemska", "Svetla", "Tamna"), model.theme, model::setTheme)
+        ModeChips(listOf("Sistemska", "Svetla", "Tamna"), model.theme, model::changeTheme)
         HorizontalDivider(); Section("Podaci")
         OutlinedButton(onClick = export, enabled = !model.busy, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.SaveAlt, null); Spacer(Modifier.width(8.dp)); Text("Izvezi rezervnu kopiju") }
         OutlinedButton(onClick = restore, enabled = !model.busy, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.Restore, null); Spacer(Modifier.width(8.dp)); Text("Vrati rezervnu kopiju") }
